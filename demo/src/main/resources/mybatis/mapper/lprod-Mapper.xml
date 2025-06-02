@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.or.ddit.mapper.LprodMapper">
+	<!-- MyBatis에서 제공해주는 데이터 입력을 나타내는 태그
+   1) 드루와 : Dao 객체가 던진 데이터타입.parameterType만 씀
+   2) 가즈아 : Dao 객체의 메소드 쪽으로 리턴할 타입.
+     - resultType : vo, hashMap, String, int
+     - resultMap  : MyBatis의 resultMap 태그를 사용
+   -->
+   <!-- lprodVO(전)=>{"lprodId":0,"title":"총알탄 개똥이","category":"소설","price":10000,"insertDate":""} -->
+   <!-- lprodVO(후)=>{"lprodId":1,"title":"총알탄 개똥이","category":"소설","price":10000,"insertDate":""} -->
+   <!-- 마이바티스 쿼리 XML에 전달되면 샵{title}을 "총알탄 개똥이"로 자동 변환함 -->
+   <!-- 매퍼interface의 메서드 명은 매퍼XML의 id속성의 값으로 사용함 -->
+   <!-- 도서 등록 + 도서 변경 실행 -->
+   <insert id="createPost" parameterType="kr.or.ddit.vo.LprodVO">
+   		<!-- 니키? 내키? 아니! 우리키!! -->
+        <!-- 키를 높이면 락(rok)커가 될 수 있을까? 
+        order : BEFORE(쿼리를 실행하기 전에 먼저 selectKey를 실행)
+        resultType : selectKey 쿼리를 실행 한 타입
+        keyProperty : lprodVO의 멤버변수(결과를 담을)
+        -->
+        <!-- 
+        resultType : 쿼리를 실행한 결과의 타입(int, String)
+        order : 메인쿼리를 실행 시 타이밍(BEFORE(전), AFTER(후))
+        keyProperty : 실행 결과 데이터를 어디에 set할것인가?
+        -->
+        <selectKey resultType="int" order="AFTER" keyProperty="lprodId">
+        	SELECT NVL(MAX(LPROD_ID),0) FROM LPROD
+        </selectKey>
+       
+		
+		MERGE INTO LPROD A
+		USING DUAL ON(A.LPROD_ID = #{lprodId})
+		WHEN MATCHED THEN
+		    UPDATE 
+		    SET    LPROD_GU,=#{lprodGu},LPROD_NM=#{lprodNm}
+		    WHERE  LPROD_ID = #{lprodId}
+		WHEN NOT MATCHED THEN
+		    INSERT (LPROD_ID, LPROD_GU, LPROD_NM)
+		    VALUES(
+				(SELECT NVL(MAX(LPROD_ID),0)+1 FROM LPROD)
+			,#{lprodGu},#{lprodNm})
+		
+   </insert>
+   <!-- 
+  	도서 상세
+	LprodVO [lprodId=3, title=null, category=null, price=0, insertDate=null]
+	public LprodVO detail(LprodVO lprodVO);
+	매퍼 인터페이스의 메소드 명을 매퍼 XML의 id속성의 값으로 쓴다
+	
+	application.properties => mybatis.type-aliases-package=kr.or.ddit.vo
+	
+	kr.or.ddit.vo.LprodVO(o)
+    LprodVO(o)
+    lprodVO(o)
+    #{} : 플레이스홀더 구문
+	LprodVO [lprodId=3, title=제목, category=카테고리, price=12000, insertDate=2025-05-29]
+    -->
+    <select id="detail" parameterType="lprodVO" resultType="lprodVO">
+    	SELECT  LPROD_ID, LPROD_GU, LPROD_NM
+		FROM    LPROD
+		WHERE   LPROD_ID = #{lprodId}
+    </select>
+    
+    <!-- 도서 삭제
+	LprodVO [lprodId=3, title=총알탄 개똥이3, category=소설, 
+	price=2000, insertDate=null]
+	public int deletePost(LprodVO lprodVO) -->
+	<delete id="deletePost" parameterType="lprodVO">
+		DELETE  FROM LPROD
+		WHERE   LPROD_ID= #{lprodId}
+	</delete>
+	
+	<!-- //도서 목록
+   map{keyword=모험}
+   public List<LprodVO> list(Map<String, Object> map) 
+   
+   like 연산자와 함께 사용된 % 또는 _를 와일드카드라고 함
+         % : 여러글자 /  _ : 한 글자
+         
+   [연산 순서]
+   휴..낮엔 더워
+   () NOT AND OR
+   
+   /list?gubun=title&keyword=모험 or /list or /list?gubun=&keyword=
+   
+   1. gubun 값이 없으면 : 전체 검색
+   2. gubun 값이 있으면 : 해당 구분 검색
+   -->
+   <select id="list" parameterType="hashMap" resultType="lprodVO">
+      SELECT LPROD_ID, LPROD_GU, LPROD_NM
+      FROM   LPROD
+      WHERE  1 = 1
+      <if test="gubun!=null and gubun!=''"><!-- 구분에 값이 있을 때 -->
+         <choose>
+            <when test='gubun=="lprodGu"'><!-- 상품번호 검색 -->
+               AND LPROD_GU LIKE '%' || #{keyword} || '%'
+            </when>
+            <otherwise><!-- 기타(상품명) 검색 -->
+               AND LPROD_NM LIKE '%' || #{keyword} || '%'
+            </otherwise>
+         </choose>
+      </if>
+      <if test="gubun==null or gubun==''"><!-- 구분에 값이 없을 때 -->
+         <if test="keyword!=null and keyword!=''">
+         AND    (LPROD_GU    LIKE '%' || #{keyword} || '%'
+            OR  LPROD_NM LIKE '%' || #{keyword} || '%'
+         )      
+         </if>
+      </if>
+      ORDER BY LPROD_ID DESC
+   </select>
+</mapper>
+

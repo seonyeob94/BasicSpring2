@@ -1,0 +1,6 @@
+package kr.or.ddit.mapper;
+
+//@Mapper
+public interface BookMapper {
+
+}

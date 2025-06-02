@@ -1,0 +1,15 @@
+package kr.or.ddit.mapper;
+
+import org.apache.ibatis.annotations.Mapper;
+
+import kr.or.ddit.vo.BookVO;
+
+@Mapper
+public interface BookMapper {
+	//book 테이블에 도서를 등록
+	public int createPost(BookVO bookVO);
+	
+	//도서상세
+	public BookVO detail(BookVO bookVO);
+
+}
