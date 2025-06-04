@@ -1,0 +1,82 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
+
+<!DOCTYPE html>
+<html>
+<head>
+<lprodGu>선엽이 시스템</lprodGu>
+</head>
+<body>
+	<h1>상품분류 목록</h1>
+	<p>${lprodVOList}</p>
+	<p>${fn:length(lprodVOList)}</p> 
+	<p>
+	<!-- action속성 및 값이 생략 시, 현재 URI(/list)를 재요청. 
+         method는 GET(form 태그의 기본 HTTP 메소드는 GET임) 
+      param : keyword=모험
+      요청URI : /list?keyword=모험 or /list or /list?keyword=
+      요청파라미터 : keyword=모험
+      요청방식 : get
+      -->
+		<form>
+			<select name="gubun">
+				<option value="" selected>선택하세요</option> 
+				<option value="lprodGu" >상품번호</option> 
+				<option value="lprodNm" >상품명</option> 
+			</select>
+			<input type="text" name="keyword" value="${param.keyword}"
+				placeholder="검색어를 입력해주세요"/>
+			<!-- submit / button / reset -->
+			<button type="submit" id="btsSearch">검색</button>
+		</form>
+	</p>
+	<table border="1">
+		<thead>
+			<tr>
+				<th>번호</th>
+				<th>상품분류번호</th>
+				<th>상품번호</th>
+				<th>상품명</th>
+			</tr>
+		</thead>
+		<!-- 
+      forEach 태그? 배열(String[], int[][]), Collection(List, Set) 또는 
+      Map(HashTable, HashMap, SortedMap)에 저장되어 있는 값들을 
+      순차적으로 처리할 때 사용함. 자바의 for, do~while을 대신해서 사용함
+      var : 변수
+      items : 아이템(배열, Collection, Map)
+      varStatus : 루프 정보를 담은 객체 활용
+         - index : 루프 실행 시 현재 인덱스(0부터 시작)
+         - count : 실행 회수(1부터 시작. 보통 행번호 출력)
+       -->
+       <!-- data : mav.addObject("lprodVOList", lprodVOList); -->
+       <!-- row : lprodVO 1행 -->
+		<tbody id="lprodTbody">
+			<c:if test="${fn:length(lprodVOList)<1}">
+				<tr>
+					<td colspan="4">데이터가 없습니다</td>
+				</tr>
+			</c:if>
+			<c:if test="${fn:length(lprodVOList)>0}">
+				<!-- 
+				[LprodVO [lprodId=4, lprodGu=p101, lprodNm=컴퓨터제품]
+			 	-->
+				<c:forEach var="lprodVO" items="${lprodVOList}" varStatus="stat">
+					<tr>
+						<td>${stat.count}</td>
+						<td>${lprodVO.lprodId}</td>
+						<!-- 제목 클릭시 상세 페이지로 이동 -->
+						<td><a href="/detail?lprodId=${lprodVO.lprodId}">${lprodVO.lprodGu}</a></td>
+						<td>${lprodVO.lprodNm}</td>
+					</tr>
+				</c:forEach>
+			</c:if>
+		</tbody>
+	</table>
+	<p>
+		<a href="/lprod/create">상품분류 등록</a>
+	</p>
+</body>
+</html>

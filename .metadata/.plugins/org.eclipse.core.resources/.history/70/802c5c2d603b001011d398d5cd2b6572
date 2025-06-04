@@ -1,7 +1,0 @@
-package kr.or.ddit.service.impl;
-
-import kr.or.ddit.service.BookService;
-
-public class BookServiceImpl implements BookService {
-
-}

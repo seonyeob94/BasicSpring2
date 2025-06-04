@@ -35,6 +35,7 @@ public class LprodServiceImpl implements LprodService {
 	// BOOK 테이블에 도서를 등록
 	@Override
 	public int createPost(LprodVO lprodVO) {
+		// lprodVO{"lprodId":3,"lprodGu":"P503","lprodNm":"빙과류"}
 		return this.lprodMapper.createPost(lprodVO);
 	}
 	

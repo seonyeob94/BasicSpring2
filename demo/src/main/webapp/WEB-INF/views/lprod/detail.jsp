@@ -37,39 +37,38 @@
    get방식 : 주소표시줄에 요청파라미터가 노출됨
    post방식 : 주소표시줄에 요청파라미터가 노출되지 않음. 주소창에 변화 없이
             데이터만 서버로 전달 됨
-   mav.addObject("bookVO", bookVo);
+   mav.addObject("lprodVO", lprodVo);
    EL : Expression Language(표현언어)
    -->
-   <p>${bookVO}</p>
-   <form id="frm" action="/createPost" method="post">
-   	  <input type="hidden" name="bookId" value="${bookVO.bookId}" />
+   <p>${lprodVO}</p>
+   <form id="frm" action="/lprod/createPost" method="post">
       <!-- 폼데이터 -->
-      <p>제목 : <input type="text" name="title" required placeholder="제목" 
-      			value="${bookVO.title}" readonly/></p>
-      <p>카테고리 : <input type="text" name="category" required placeholder="카테고리" 
-      			value="${bookVO.category}" readonly/></p>
-      <p>가격 : <input type="number" name="price" required placeholder="가격" 
-      			value="${bookVO.price}" readonly/></p>
+      <p>상품분류 아이디 : <input type="number" name="lprodId" required placeholder="상품분류 아이디" 
+      			value="${lprodVO.lprodId}" readonly/></p>
+      <p>상풍분류 구분 : <input type="text" name="lprodGu" required placeholder="상풍분류 구분" 
+      			value="${lprodVO.lprodGu}" readonly/></p>
+      <p>상풍분류 명 : <input type="text" name="lprodNm" required placeholder="상풍분류 명" 
+      			value="${lprodVO.lprodNm}" readonly/></p>
       <p>
          <!-- <form>~</form> 태그 안에 내용이 서버로 전송됨
                서버로 전달되는 항목들은 form 태그 안에 존재해야 함.
                name 속성은 key로, value 속성을 value로 판단함
                
-               /detail?bookId=2
-               param : bookId=2
-               param.bookId : 2
+               /detail?lprodId=2
+               param : lprodId=2
+               param.lprodId : 2
                1) 출처 : URL
              -->
-         <a href="/modify?bookId=${param.bookId}">수정</a>
+         <a href="/lprod/modify?lprodId=${param.lprodId}">수정</a>
          <a href="#" id="aDelete">삭제</a>
-         <a href="/list">목록</a>
+         <a href="/lprod/list">목록</a>
          <!-- 
-         mav.setObject("bookVO",bookVO)를 통해
-         달러{bookVO}
+         mav.setObject("lprodVO",lprodVO)를 통해
+         달러{lprodVO}
          		2) 출처 : Controller
          
-         <a href="/modify?bookId=${bookVO.bookId}">수정</a>
-         <a href="/delete?bookId=${bookVO.bookId}">삭제</a>
+         <a href="/modify?lprodId=${lprodVO.lprodId}">수정</a>
+         <a href="/delete?lprodId=${lprodVO.lprodId}">삭제</a>
          <a href="/list">목록</a>
           -->
       </p>
@@ -81,21 +80,20 @@
    			//1. action속성의 값을 /deletePost로 변경
    			//속성=애트리뷰트=필드=컬럼=열
    			//<form id="frm" action="/createPost" method="post">
-   			$("#frm").attr("action","/deletePost");
-            
+   			$("#frm").attr("action","/lprod/deletePost");
             //2. confirm으로 삭제 한번 더 확인
             let result = confirm("삭제하시겠습니까?");
             console.log("result : ", result);
             
             //3. <form 을 submit 
-            //   => 폼 데이터 중의 <input type="text" name="bookId"..가 필수
+            //   => 폼 데이터 중의 <input type="text" name="lprodId"..가 필수
             //DELETE FROM BOOK
             //WHERE BOOK_ID = 2;
             if(result > 0){//[확인] 클릭 => 1(true)
             	console.log("삭제 실행!!");
             	/*
             	요청URI : /deletePost
-               	요청파라미터 : request{bookId=2}
+               	요청파라미터 : request{lprodId=2}
                	요청방식 : post
             	*/
             	$("#frm").submit();

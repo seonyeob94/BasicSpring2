@@ -75,13 +75,12 @@ public class LprodController {
 	 */
 	@RequestMapping(value = "/createPost", method = RequestMethod.POST)
 	public ModelAndView createPost(LprodVO lprodVO) {
-		// lprodVO{"lprodId":0,"title":"총알탄
-		// 개똥이","category":"소설","price":10000,"insertDate":""}
-		// *
+		// lprodVO{"lprodId":3,"lprodGu":"P503","lprodNm":"빙과류"}
+		
 		log.info("createPost->lprodVO : " + lprodVO);
 
 		// insert/update/delete 시 return 타입은 int
-		// BOOK 테이블에 도서를 등록
+		// LPROD 테이블에 상품분류를 등록
 		int result = this.lprodService.createPost(lprodVO);
 		log.info("result : " + result);
 		log.info("createPost->lprodVO : " + lprodVO);
@@ -90,7 +89,7 @@ public class LprodController {
 		// redirect : URI를 재요청
 
 		// return new ModelAndView("redirect:/create");
-		return new ModelAndView("redirect:/detail?lprodId=" + lprodVO.getLprodId());
+		return new ModelAndView("redirect:/lprod/detail?lprodId=" + lprodVO.getLprodId());
 
 	}
 
@@ -98,8 +97,8 @@ public class LprodController {
 	// 요청된 URI 주소 : http://localhost/detail?lprodId=3
 	// 요청파라미터, HTTP 파리미터, 쿼리 스트링(Query String) : lprodId=3
 	// 요청방식 : get
-	// 매개변수 : LprodVO lprodVO => {"lprodId":"3","title":"","category":""
-	// ,"price":0,"insertDate":""}
+	// 매개변수 : LprodVO lprodVO => {"lprodId":"3","lprodGu":"","lprodNm":""}
+	
 	/*
 	 * public ModelAndView detail(int lprodId, LprodVO lprodVO) {
 	 */
@@ -178,9 +177,9 @@ public class LprodController {
 		
 		//상세로 이동
 		//새로운 URI를 재요청 : redirect
-		return new ModelAndView("redirect:/detail?lprodId=" + lprodId);
+		return new ModelAndView("redirect:/lprod/detail?lprodId=" + lprodId);
 
-	}
+	}	
 	
 	/*도서삭제
     요청URI : /deletePost
@@ -203,12 +202,12 @@ public class LprodController {
 		if(result > 0) {//삭제 성공(1행 이상)
 		
 			//redirect -> 목록 URI 재요청
-			mav.setViewName("redirect:/list");
+			mav.setViewName("redirect:/lprod/list");
 		
 		}else {//삭제 실패(0)
 			
 			//상세페이지로 되돌아옴
-			mav.setViewName("redirect:/detail?lprodId="+lprodVO.getLprodId());
+			mav.setViewName("redirect:/lprod/detail?lprodId="+lprodVO.getLprodId());
 
 		}
 		return mav;
@@ -217,11 +216,12 @@ public class LprodController {
 	
 	/*	도서 목록 
 	 action속성 및 값이 생략 시, 현재 URI(/list)를 재요청. 
-	    method는 GET(form 태그의 기본 HTTP 메소드는 GET임) 
-	 param : keyword=모험
-	 요청URI : /list?gubun=title&keyword=모험 or /list or /list?gubun=&keyword=
-	 요청파라미터 : keyword=모험
-	 요청방식 : get
+         method는 GET(form 태그의 기본 HTTP 메소드는 GET임) 
+      param : keyword=모험
+      요청URI : /lprod/list?keyword=캐주얼&gubun=lprodNm or /lprod/list or /lprod/list?keyword=&gubun=
+      요청파라미터 : keyword=모험
+      요청방식 : get
+      
 	*/
 	@RequestMapping(value = "/list", method = RequestMethod.GET)
 	public ModelAndView list(ModelAndView mav,

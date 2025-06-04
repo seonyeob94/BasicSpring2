@@ -9,16 +9,17 @@ import kr.or.ddit.vo.LprodVO;
 
 @Mapper
 public interface LprodMapper {
-	//lprod 테이블에 도서를 등록
+	
+	//lprod 테이블에 상품분류를 등록
+	// lprodVO{"lprodId":3,"lprodGu":"P503","lprodNm":"빙과류"}
 	public int createPost(LprodVO lprodVO);
 	
 	//도서 상세
-	//LprodVO [lprodId=3, title=null, category=null, price=0, insertDate=null]
+	//LprodVO [lprodId=3, lprodGu=null, lprodNm=null]
 	public LprodVO detail(LprodVO lprodVO);
 	
 	//도서 삭제
-	//LprodVO [lprodId=3, title=총알탄 개똥이3, category=소설, 
-	//      price=2000, insertDate=null]
+	//LprodVO [lprodId=3, lprodGu=P503, lprodNm=빙과류]
 	public int deletePost(LprodVO lprodVO);
 	
 	//도서 목록
