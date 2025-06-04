@@ -10,6 +10,8 @@
 		<item key="isRegEx" value="false"/>
 		<item key="replaceBarOpen" value="true"/>
 		<list key="findhistory">
+			<item value="book"/>
+			<item value="Book"/>
 			<item value="lprodNM"/>
 			<item value="category"/>
 			<item value="LPROD_Nm"/>
@@ -17,15 +19,15 @@
 			<item value="LPROD_NAME"/>
 			<item value="LPRODNM"/>
 			<item value="LPRODGU"/>
-			<item value="book"/>
 			<item value="title"/>
-			<item value="Book"/>
 			<item value="BOOK"/>
 			<item value="jstl"/>
 			<item value="deletePost"/>
 			<item value="lom"/>
 		</list>
 		<list key="replacehistory">
+			<item value="lprod"/>
+			<item value="Lprod"/>
 			<item value="lprodNm"/>
 			<item value="LPROD_NM"/>
 			<item value="LPROD_Nm"/>
@@ -33,8 +35,6 @@
 			<item value="LPROD_GU"/>
 			<item value="lprodNM"/>
 			<item value="lprodGu"/>
-			<item value="lprod"/>
-			<item value="Lprod"/>
 			<item value="LPROD"/>
 		</list>
 	</section>
