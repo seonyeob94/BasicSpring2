@@ -56,6 +56,15 @@ public class LprodServiceImpl implements LprodService {
 		// TODO Auto-generated method stub
 		return this.lprodMapper.list(map);
 	}
+	
+	
+	//total 구하기
+	//			map 타입의 매개변수
+	@Override
+	public int getTotal(Map<String, Object> map) {
+		// 메소드 호출시 파라미터
+		return this.lprodMapper.getTotal(map);
+	}
 
 
 }

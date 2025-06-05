@@ -12,8 +12,8 @@
 </head>
 <body>
 	<h1>상품분류 목록</h1>
-	<p>${lprodVOList}</p>
-	<p>${fn:length(lprodVOList)}</p>  
+	<%-- <p>${lprodVOList}</p>
+	<p>${fn:length(lprodVOList)}</p>   --%>
 	<p>
 	<!-- action속성 및 값이 생략 시, 현재 URI(/list)를 재요청. 
          method는 GET(form 태그의 기본 HTTP 메소드는 GET임) 
@@ -73,10 +73,14 @@
 	                     varStatus : 루프 정보를 담은 객체 활용
 	                        - index : 루프 실행 시 현재 인덱스(0부터 시작)
 	                        - count : 실행 회수(1부터 시작. 보통 행번호 출력)
+	                        
+	                        mav.addObject("articlePage", articlePage);
+	                        
+	                        articlePage=> List<LprodVO> 
                             -->
                          <c:forEach var="LprodVO" items="${lprodVOList}" varStatus="stat">
 	                    <tr>
-	                      <td>${stat.count}</td>
+	                      <td>${LprodVO.rnum}</td>
 	                      <td>${LprodVO.lprodId}</td>
 	                      <td><a href="/lprod/detail?lprodId=${LprodVO.lprodId}">${LprodVO.lprodGu}</a></td>
 	                      <td>${LprodVO.lprodNm}</td>
@@ -87,12 +91,27 @@
 	              </div>
 	              <!-- /.card-body -->
 	              <div class="card-footer clearfix">
-	                <ul class="pagination pagination-sm m-0 float-right">
-	                  <li class="page-item"><a class="page-link" href="#">«</a></li>
-	                  <li class="page-item"><a class="page-link" href="#">1</a></li>
-	                  <li class="page-item"><a class="page-link" href="#">2</a></li>
-	                  <li class="page-item"><a class="page-link" href="#">3</a></li>
-	                  <li class="page-item"><a class="page-link" href="#">»</a></li>
+	                <ul class="pagination pagination-sm m-0 float-right"> <!-- 시작블록번호 - 블록크기=> 이전블록으로 이동 -->
+	                 
+	                  <!-- 시작 블록 번호가 6보다 작을 때 가리자. 6이상일 땐 보이게 됨 -->
+	                  		
+	                  <li class="page-item"><a class="page-link" href="/lprod/list?currentPage=1&keyword=${param.keyword}&gubun=${param.gubun}"
+	                  		 <c:if test="${articlePage.startPage < 6}">style="display:none;"</c:if>> « </a></li>
+	                  
+	                  
+	                  <li class="page-item"><a class="page-link" href="/lprod/list?currentPage=${articlePage.startPage-1}&keyword=${param.keyword}&gubun=${param.gubun}"
+	                  		 <c:if test="${articlePage.startPage < 6}">style="display:none;"</c:if>> 이전 </a></li>
+	                  <c:forEach var="pNo" begin="${articlePage.startPage}" 
+	                  		end="${articlePage.endPage}">
+	                    <li class="page-item"><a class="page-link" href="/lprod/list?currentPage=${pNo}&keyword=${param.keyword}&gubun=${param.gubun}">${pNo}</a></li>
+                	  </c:forEach>	<!-- 종료 블록 번호가 전체 페이지 수 보다 크거나 같다면 none -->                              <!-- 시작블록번호 + 블록크기 => 다음 블록으로 이동 -->
+                	  
+	                  <li class="page-item"><a class="page-link" href="/lprod/list?currentPage=${articlePage.endPage+1}&keyword=${param.keyword}&gubun=${param.gubun}"
+	                  <c:if test="${articlePage.endPage>=articlePage.totalPages}">style="display:none"</c:if>>다음</a></li>
+	                  
+	                  
+	                  <li class="page-item"><a class="page-link" href="/lprod/list?currentPage=${articlePage.totalPages}&keyword=${param.keyword}&gubun=${param.gubun}"
+	                  <c:if test="${articlePage.endPage>=articlePage.totalPages}">style="display:none"</c:if>>»</a></li>
 	                </ul>
 	              </div>
 	            </div>
@@ -102,6 +121,7 @@
       </div>
    </section>
 	
+	<%-- 
 	<table border="1">
 		<thead>
 			<tr>
@@ -144,7 +164,8 @@
 				</c:forEach>
 			</c:if>
 		</tbody>
-	</table>
+	</table> 
+	--%>
 	<p>
 		<a href="/lprod/create">상품분류 등록</a>
 	</p>

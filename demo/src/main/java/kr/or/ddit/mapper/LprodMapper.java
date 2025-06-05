@@ -24,5 +24,8 @@ public interface LprodMapper {
 	
 	//도서 목록
 	public List<LprodVO> list(Map<String, Object> map);
+	
+	//total 구하기
+	public int getTotal(Map<String, Object> map);
 
 }

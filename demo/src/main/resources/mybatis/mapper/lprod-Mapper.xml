@@ -1,6 +1,26 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="kr.or.ddit.mapper.LprodMapper">
+
+		<sql id="where">
+			<if test="gubun!=null and gubun!=''"><!-- 구분에 값이 있을 때 -->
+	            <choose>
+	               <when test='gubun=="lprodGu"'><!-- 상품분류 구분 검색 -->
+	                  AND LPROD_GU LIKE '%' || #{keyword} || '%'
+	               </when>
+	               <otherwise><!-- 상품분류 명 검색 -->
+	                  AND LPROD_NM LIKE '%' || #{keyword} || '%'
+	               </otherwise>
+	            </choose>
+	         </if>
+	         <if test="gubun==null or gubun==''"><!-- 구분에 값이 없을 때 -->
+	            <if test="keyword!=null and keyword!=''">
+	            AND    (LPROD_GU    LIKE '%' || #{keyword} || '%'
+	               OR  LPROD_NM    LIKE '%' || #{keyword} || '%'
+	            )      
+	            </if>
+	         </if>
+		</sql>
 		<!-- MyBatis에서 제공해주는 데이터 입력을 나타내는 태그
 	   1) 드루와 : Dao 객체가 던진 데이터타입.parameterType만 씀
 	   2) 가즈아 : Dao 객체의 메소드 쪽으로 리턴할 타입.
@@ -87,33 +107,37 @@
    휴..낮엔 더워
    () NOT AND OR
    
-   /list?gubun=title&keyword=모험 or /list or /list?gubun=&keyword=
+   /list?gubun=lprodNm&keyword=모험&currentPage=3
+       or /list or /list?gubun=&keyword=&currentPage=
    
    1. gubun 값이 없으면 : 전체 검색
    2. gubun 값이 있으면 : 해당 구분 검색
+   map{gubun=lprodNm,keyword=모험,currentPage=3}
    -->
-   <select id="list" parameterType="hashMap" resultType="lprodVO">
-      SELECT LPROD_ID, LPROD_GU, LPROD_NM
-      FROM   LPROD
-      WHERE  1 = 1
-      <if test="gubun!=null and gubun!=''"><!-- 구분에 값이 있을 때 -->
-         <choose>
-            <when test='gubun=="lprodGu"'><!-- 상품번호 검색 -->
-               AND LPROD_GU LIKE '%' || #{keyword} || '%'
-            </when>
-            <otherwise><!-- 기타(상품분류 명) 검색 -->
-               AND LPROD_NM LIKE '%' || #{keyword} || '%'
-            </otherwise>
-         </choose>
-      </if>
-      <if test="gubun==null or gubun==''"><!-- 구분에 값이 없을 때 -->
-         <if test="keyword!=null and keyword!=''">
-         AND    (LPROD_GU    LIKE '%' || #{keyword} || '%'
-            OR  LPROD_NM LIKE '%' || #{keyword} || '%'
-         )      
-         </if>
-      </if>
-      ORDER BY LPROD_ID DESC
+  <select id="list" parameterType="hashMap" resultType="lprodVO">
+      WITH T AS(
+          SELECT ROW_NUMBER() OVER(ORDER BY LPROD_ID) RNUM
+               , LPROD_ID, LPROD_GU, LPROD_NM
+          FROM   LPROD
+          WHERE  1 = 1
+          <!-- <sql id="where">  -->
+		<include refid="where"></include>
+      )
+      SELECT * FROM T
+      WHERE T.RNUM BETWEEN (${currentPage} * 10) - (10 - 1) AND (${currentPage} * 10)
    </select>
+   
+   	<!-- total 구하기
+	public int getTotal(Map<String, Object> map); 
+	
+	map{keyword="", gubun="", currentPage=3}
+	-->
+	<select id="getTotal" parameterType="hashMap" resultType="int">
+		SELECT COUNT(*)
+		FROM   LPROD
+		WHERE  1 = 1
+		<!-- <sql id="where">  -->
+		<include refid="where"></include>
+	</select>
 </mapper>
 

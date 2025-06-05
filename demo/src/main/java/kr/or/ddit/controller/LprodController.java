@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
 import kr.or.ddit.service.LprodService;
+import kr.or.ddit.util.ArticlePage;
 import kr.or.ddit.vo.LprodVO;
 import lombok.extern.slf4j.Slf4j;
 
@@ -214,36 +215,52 @@ public class LprodController {
 	}
 	
 	
-	/*	도서 목록 
-	 action속성 및 값이 생략 시, 현재 URI(/list)를 재요청. 
+	/* 상품분류 목록
+    action속성 및 값이 생략 시, 현재 URI(/list)를 재요청. 
          method는 GET(form 태그의 기본 HTTP 메소드는 GET임) 
       param : keyword=모험
-      요청URI : /lprod/list?keyword=캐주얼&gubun=lprodNm or /lprod/list or /lprod/list?keyword=&gubun=
-      요청파라미터 : keyword=모험
+      요청URI : /lprod/list?keyword=캐주얼&gubun=lprodNm&currentPage=3
+          or /lprod/list or /lprod/list?keyword=&gubun=&currentPage=
+      요청파라미터 : keyword=캐주얼&gubun=lprodNm&currentPage=3
       요청방식 : get
-      
-	*/
+    */
 	@RequestMapping(value = "/list", method = RequestMethod.GET)
 	public ModelAndView list(ModelAndView mav,
 			@RequestParam(value = "keyword",required = false, defaultValue = "" ) String keyword,
-			@RequestParam(value = "gubun",required = false, defaultValue = "" ) String gubun) {
-		
+			@RequestParam(value = "gubun",required = false, defaultValue = "" ) String gubun,
+			@RequestParam(value = "currentPage",required = false, defaultValue = "1") int currentPage) {
 		// /list->keyword : 모험
 		// /list->keyword :
 		log.info("list->keyword : " + keyword);
 		log.info("list->gubun : " + gubun);
+		log.info("list->currentPage : " + currentPage);//현재 페이지 번호
 		
 		//맴(나) : 하 하 쏘맵
 		//Map	: HashTable, HasMap, SortedMap
 		Map<String,Object> map = new HashMap<String, Object>();
 		map.put("keyword", keyword);
 		map.put("gubun", gubun);
+		map.put("currentPage", currentPage);
+		//map{keyword="", gubun="", currentPage=3}
+		log.info("list->map : " + map);
 		
+		//total 구하기
+		int total = this.lprodService.getTotal(map);
+		log.info("list->total : " + total);
+		
+		
+		//content 구성
 		List<LprodVO> lprodVOList = this.lprodService.list(map);
 		log.info("list->lprodVOList : " + lprodVOList);
 		
+		//페이징 객체 생성
+		ArticlePage<LprodVO> articlePage = 
+				new ArticlePage<LprodVO>(total, currentPage, 10, lprodVOList, keyword);
+		log.info("list->articlePage : " + articlePage);
+		
 		//Model(데이터)
 		mav.addObject("lprodVOList", lprodVOList);
+		mav.addObject("articlePage", articlePage);
 		//forwarding : jsp
 		mav.setViewName("lprod/list");
 		
