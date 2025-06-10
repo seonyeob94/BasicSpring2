@@ -6,6 +6,7 @@ import java.util.Map;
 import org.apache.ibatis.annotations.Mapper;
 
 import kr.or.ddit.vo.BookVO;
+import kr.or.ddit.vo.ProductVO;
 
 @Mapper
 public interface BookMapper {
@@ -23,5 +24,9 @@ public interface BookMapper {
 	
 	//도서 목록
 	public List<BookVO> list(Map<String, Object> map);
+	
+	
+	//상품목록
+	public List<ProductVO> products();
 
 }

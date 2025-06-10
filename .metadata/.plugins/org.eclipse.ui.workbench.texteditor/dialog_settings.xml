@@ -10,6 +10,10 @@
 		<item key="isRegEx" value="false"/>
 		<item key="replaceBarOpen" value="true"/>
 		<list key="findhistory">
+			<item value="lprod"/>
+			<item value="상품분류"/>
+			<item value="Lprod"/>
+			<item value="회원분류"/>
 			<item value="book"/>
 			<item value="Book"/>
 			<item value="lprodNM"/>
@@ -21,11 +25,11 @@
 			<item value="LPRODGU"/>
 			<item value="title"/>
 			<item value="BOOK"/>
-			<item value="jstl"/>
-			<item value="deletePost"/>
-			<item value="lom"/>
 		</list>
 		<list key="replacehistory">
+			<item value="Users"/>
+			<item value="users"/>
+			<item value="회원"/>
 			<item value="lprod"/>
 			<item value="Lprod"/>
 			<item value="lprodNm"/>

@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.or.ddit.mapper.UsersMapper">
+
+	<sql id="where">
+			<if test="gubun!=null and gubun!=''"><!-- 구분에 값이 있을 때 -->
+	            <choose>
+	               <when test='gubun=="username"'><!-- 회원 구분 검색 -->
+	                  AND USERNAME LIKE '%' || #{keyword} || '%'
+	               </when>
+	               <otherwise><!-- 상품분류 명 검색 -->
+	                  AND NAME LIKE '%' || #{keyword} || '%'
+	               </otherwise>
+	            </choose>
+	         </if>
+	         <if test="gubun==null or gubun==''"><!-- 구분에 값이 없을 때 -->
+	            <if test="keyword!=null and keyword!=''">
+	            AND    (USERNAME    LIKE '%' || #{keyword} || '%'
+	               OR  NAME    LIKE '%' || #{keyword} || '%'
+	            )      
+	            </if>
+	         </if>
+		</sql>
+	
+	<!-- 관계차수 => USERS : AUTHORITIES = 1 : N 
+   mybatis.type-aliases-package=kr.or.ddit.vo
+   -->
+	<resultMap id="usersMap" type="UsersVO">
+		<result property="username" column="USERNAME" />
+		<result property="name" column="NAME" />
+		<result property="password" column="PASSWORD" />
+		<result property="enabled" column="ENABLED" />
+		<collection property="authoritiesVOList" resultMap="authoritiesMap"></collection>
+   </resultMap>
+   
+	 <resultMap type="authoritiesVO" id="authoritiesMap">
+      <result property="username" column="USERNAME" />
+      <result property="authority" column="AUTHORITY" /> 
+   </resultMap>
+	<!-- 
+	//회원 목록
+	public List<UsersVO> list(Map<String, Object> map);
+	
+	조인문 => resultMap
+	 -->
+	<!-- MyBatis에서 제공해주는 데이터 입력을 나타내는 태그
+	1) 드루와 : Mapper 객체가 던진 데이터타입.parameterType만 씀
+	2) 가즈아 : Mapper 객체의 메소드 쪽으로 리턴할 타입.
+	  - resultType : vo, hashMap, String, int
+	  - resultMap  : MyBatis의 resultMap 태그를 사용(조인문)
+	-->
+	<select id="list" parameterType="hashMap" resultMap="usersMap">
+		SELECT
+		A.USERNAME, A.NAME, A.PASSWORD, A.ENABLED
+		, B.AUTHORITY
+		FROM USERS A
+		JOIN AUTHORITIES B ON A.USERNAME=B.USERNAME
+		WHERE A.ENABLED = '1'
+		ORDER BY 1
+	</select>
+	
+	<!-- 
+  	도서 상세
+	LprodVO [lprodId=3, title=null, category=null, price=0, insertDate=null]
+	public LprodVO detail(LprodVO lprodVO);
+	매퍼 인터페이스의 메소드 명을 매퍼 XML의 id속성의 값으로 쓴다
+	
+	application.properties => mybatis.type-aliases-package=kr.or.ddit.vo
+	
+	kr.or.ddit.vo.LprodVO(o)
+    LprodVO(o)
+    lprodVO(o)
+    #{} : 플레이스홀더 구문
+	LprodVO [lprodId:"3",lprodGu:null,lprodNm:null]
+	LprodVO [lprodId:"3",lprodGu:p201,lprodNm:남성캐주얼의류]
+    -->
+    <select id="detail" parameterType="usersVO" resultType="usersVO">
+    	SELECT  USERNAME, NAME, ENABLED
+		FROM    USERS
+		WHERE   USERNAME = #{username}
+    </select>
+	
+	<insert id="createPost" parameterType="usersVO">
+   		
+		MERGE INTO USERS A
+		USING DUAL ON(A.USERNAME = #{username})
+		WHEN MATCHED THEN
+		    UPDATE 
+		    SET    NAME=#{name},PASSWORD=#{password}
+		    WHERE  USERNAME = #{username}
+		WHEN NOT MATCHED THEN
+		    INSERT (USERNAME, NAME, PASSWORD,ENABLED)
+		    VALUES(
+				#{username},#{name},#{password},'1')
+		
+   </insert>
+   
+   <update id="deletePost" parameterType="usersVO" >
+   		UPDATE USERS
+   		SET ENABLED ='2'
+   		WHERE   USERNAME = #{username}
+   </update>
+   
+   <!-- total 구하기
+	public int getTotal(Map<String, Object> map); 
+	
+	map{keyword="", gubun="", currentPage=3}
+	-->
+	<select id="getTotal" parameterType="hashMap" resultType="int">
+		SELECT COUNT(*)
+		FROM USERS A
+		JOIN AUTHORITIES B ON A.USERNAME=B.USERNAME
+		WHERE  1 = 1
+		AND A.ENABLED = '1'
+		<!-- <sql id="where">  -->
+		<include refid="where"></include>
+	</select>
+</mapper>
+

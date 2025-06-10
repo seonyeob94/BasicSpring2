@@ -114,5 +114,17 @@
       </if>
       ORDER BY BOOK_ID DESC
    </select>
+   
+   <!-- 
+   //상품목록
+	public List<ProductVO> products();
+	행 수 : 카디널리티 / 열수 : DEFREE
+    -->
+    <select id="products" resultType="ProductVO">
+    	SELECT PRODUCT_ID, PNAME, UNIT_PRICE, DESCRIPTION, MANUFACTURER
+    	, CATEGORY, UNITS_IN_STOCK, CONDITION, FILENAME, QUANTITY
+    	FROM PRODUCT
+    	ORDER BY 1
+    </select>
 </mapper>
 

@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import kr.or.ddit.mapper.BookMapper;
 import kr.or.ddit.service.BookService;
 import kr.or.ddit.vo.BookVO;
+import kr.or.ddit.vo.ProductVO;
 
 //서비스 클래스 : 비즈니스 로직
 //스프링 MVC 구조에서 Controller와 DAO를 연결하는 역할
@@ -54,6 +55,13 @@ public class BookServiceImpl implements BookService {
 	public List<BookVO> list(Map<String, Object> map) {
 		// TODO Auto-generated method stub
 		return this.bookMapper.list(map);
+	}
+	
+	//상품목록
+	@Override
+	public List<ProductVO> products() {
+		// TODO Auto-generated method stub
+		return this.bookMapper.products();
 	}
 
 

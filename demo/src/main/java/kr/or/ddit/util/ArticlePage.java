@@ -74,6 +74,39 @@ public class ArticlePage<T> {
 	         }
 	         
 		}
+		
+		pagingArea += "<div class='col-sm-12 col-md-7'>";
+	      pagingArea += "<div class='dataTables_paginate paging_simple_numbers' id='example2_paginate'>";
+	      pagingArea += "<ul class='pagination'>";
+	      pagingArea += "<li class='paginate_button page-item previous "; 
+	      if(this.startPage<6) {
+	         pagingArea += "disabled ";
+	      }
+	      pagingArea += "'";
+	      pagingArea += "id='example2_previous'>";
+	      pagingArea += "<a href='"+this.url+"?currentPage="+(this.startPage-5)+"&keyword="+this.keyword+"' aria-controls='example2' data-dt-idx='0' tabindex='0' ";
+	      pagingArea += "class='page-link'>Previous</a></li>";
+	      
+	      for(int pNo=this.startPage;pNo<=this.endPage;pNo++) {      
+	      pagingArea += "<li class='paginate_button page-item ";
+	         if(this.currentPage == pNo) {
+	            pagingArea += "active";
+	         }
+	         pagingArea += "'>";
+	         pagingArea += "<a href='"+this.url+"?currentPage="+pNo+"&keyword="+this.keyword+"' aria-controls='example2' data-dt-idx='1' tabindex='0' ";
+	         pagingArea += "class='page-link'>"+pNo+"</a>";
+	         pagingArea += "</li>";
+	      }
+	      pagingArea += "<li class='paginate_button page-item next "; 
+	      if(this.endPage>=this.totalPages) {
+	         pagingArea += "disabled";
+	      }
+	      pagingArea += "' id='example2_next'><a ";
+	      pagingArea += "href='"+this.url+"?currentPage="+(this.startPage+5)+"&keyword="+this.keyword+"' aria-controls='example2' data-dt-idx='7' ";
+	      pagingArea += "tabindex='0' class='page-link'>Next</a></li>";
+	      pagingArea += "</ul>";
+	      pagingArea += "</div>";
+	      pagingArea += "</div>";
 	}
 
 	

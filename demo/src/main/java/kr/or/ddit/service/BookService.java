@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Map;
 
 import kr.or.ddit.vo.BookVO;
+import kr.or.ddit.vo.ProductVO;
 
 public interface BookService {
 
@@ -19,5 +20,9 @@ public interface BookService {
 	
 	//도서목록
 	public List<BookVO> list(Map<String, Object> map);
+	
+	
+	//상품목록
+	public List<ProductVO> products();
 
 }

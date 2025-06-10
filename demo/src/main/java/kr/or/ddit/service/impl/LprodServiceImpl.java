@@ -50,7 +50,8 @@ public class LprodServiceImpl implements LprodService {
 	public int deletePost(LprodVO lprodVO) {
 		return this.lprodMapper.deletePost(lprodVO);
 	}
-
+	
+	//도서목록
 	@Override
 	public List<LprodVO> list(Map<String, Object> map) {
 		// TODO Auto-generated method stub
