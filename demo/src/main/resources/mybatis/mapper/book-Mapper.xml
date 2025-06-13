@@ -126,5 +126,59 @@
     	FROM PRODUCT
     	ORDER BY 1
     </select>
+    
+    <!-- 
+    //상품상세
+	public Object produt(ProductVO productVO)
+	
+	productVO{productId= 'P1234', pname=개똥이폰,description=좋은폰}
+     -->
+     <select id="produt" parameterType="productVO" resultType="productVO">
+     	SELECT PRODUCT_ID, PNAME, UNIT_PRICE, DESCRIPTION, MANUFACTURER
+		     , CATEGORY, UNITS_IN_STOCK, CONDITION, FILENAME, QUANTITY
+		FROM PRODUCT 
+		WHERE PRODUCT_ID = #{productId}
+     </select>
+     
+     <!-- 상품코드 미리 생성 -->
+   <select id="getProductId" resultType="String">
+      SELECT SUBSTR(MAX(PRODUCT_ID),1,1)
+		    ||(SUBSTR(MAX(PRODUCT_ID),2,4)+1)  <!-- 괄호가 없으면 +1이 나중에 실행됨 -->
+		FROM PRODUCT
+   </select>
+   
+   <!-- 
+	public ProductVO processAddProduct(ProductVO productVO); 
+	-->
+	
+	<insert id="processAddProduct" parameterType="productVO">
+		<!-- 
+      resultType : 쿼리로부터 반환되는 키 값의 자바 타입(Java Type)을 지정
+      order : 키 생성 쿼리를 메인 SQL(보통 <insert>)보다 먼저 실행할지(BEFORE) 또는 
+            나중에 실행할지(AFTER)를 지정
+      keyProperty : selectKey 쿼리로부터 반환된 키 값을 저장할 파라미터 
+            객체(매퍼 메서드에 전달되는 객체)의 속성(property) 이름을 지정
+       -->
+       
+       <selectKey resultType="String" order="BEFORE" keyProperty="productId">
+			SELECT SUBSTR(MAX(PRODUCT_ID),1,1)
+				||(SUBSTR(MAX(PRODUCT_ID),2) + 1)  
+			FROM PRODUCT
+       </selectKey>
+	
+	
+		INSERT INTO PRODUCT(
+			PRODUCT_ID, PNAME, UNIT_PRICE, DESCRIPTION, MANUFACTURER, 
+			CATEGORY, UNITS_IN_STOCK, CONDITION
+			<if test="filename != null and filename != ''">, FILENAME</if>
+			<if test="quantity != null and quantity != 0">, QUANTITY</if>
+		)
+		VALUES(
+			#{productId}, #{pname}, #{unitPrice}, #{description}, #{manufacturer}, 
+			#{category}, #{unitsInStock}, #{condition}
+			<if test="filename != null and filename != ''">, #{filename}</if>
+			<if test="quantity != null and quantity != 0">, #{quantity}</if>
+		)
+	</insert>
 </mapper>
 

@@ -40,9 +40,14 @@
 	<%@ include file="./menu.jsp"%>
 	<!-- // menu.jsp 인클루드 끝 -->
 	<%!// 선언문
-	// 전역변수
-	String greeting = "Welcome to Web Shopping Mall";
-	String tagline = "Welcome to Web Market";%>
+		// 전역변수
+		String greeting = "Welcome to Web Shopping Mall";
+		String tagline = "Welcome to Web Market";
+		
+		
+	%>
+
+
 
 	<div class="jumbotron">
 		<div class="container">
@@ -57,6 +62,14 @@
 			// 스크립틀릿
 			//지역변수 선언
 			String am_pm = "AM";
+			
+			//jsp 내장객체
+			pageContext.setAttribute("name", "개똥이");
+			request.setAttribute("age", 21);
+			
+			session.setAttribute("password", "java");
+			application.setAttribute("department", "develop");
+			
 			//page import="java.util.Date"
 			Date day = new Date();
 			int hour = day.getHours();
@@ -72,9 +85,17 @@
 
 			String CT = hour + ":" + minute + ":" + second + " " + am_pm;
 			out.print("<p>현재 접속시각 : " + CT + "</p>");
+
+			//request.getRequestDispatcher("/jsp/products").include(request, response);
 			%>
 		</div>
 	</div>
+	<%//동일 jsp안에서는 공유가능
+	String name = (String)pageContext.getAttribute("name");
+    
+    out.print("<p>name : "+name+"</p>");
+    
+	%>
 	<!-- // footer.jsp 인클루드 시작 /// 디렉티브 ./ : 현재폴더의-->
 	<%@ include file="./footer.jsp"%>
 	<!-- // footer.jsp 인클루드 끝 -->

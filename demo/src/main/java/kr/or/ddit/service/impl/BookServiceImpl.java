@@ -64,5 +64,24 @@ public class BookServiceImpl implements BookService {
 		return this.bookMapper.products();
 	}
 
+	@Override
+	public ProductVO product(ProductVO productVO) {
+		// TODO Auto-generated method stub
+		return this.bookMapper.produt(productVO);
+	}
+	/*
+	   <!-- 상품코드 미리 생성 --> 
+	   <select id="getProductId" resultType="String">
+	 */
+	@Override
+	public String getProductId() {
+		return this.bookMapper.getProductId();
+	}
+
+	@Override
+	public int processAddProduct(ProductVO productVO) {
+		// TODO Auto-generated method stub
+		return this.bookMapper.processAddProduct(productVO);
+	}
 
 }

@@ -25,4 +25,11 @@ public interface BookService {
 	//상품목록
 	public List<ProductVO> products();
 
+	public ProductVO product(ProductVO productVO);
+
+	public String getProductId();
+
+	public int processAddProduct(ProductVO productVO);
+	
+	
 }

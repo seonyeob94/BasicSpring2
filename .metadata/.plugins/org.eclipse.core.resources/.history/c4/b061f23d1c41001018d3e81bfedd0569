@@ -1,6 +1,0 @@
-package kr.or.ddit.util;
-
-//페이징 관련 정보 + 게시글 정보
-public class ArticlePage {
-
-}

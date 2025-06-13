@@ -10,6 +10,7 @@
 		<item key="isRegEx" value="false"/>
 		<item key="replaceBarOpen" value="true"/>
 		<list key="findhistory">
+			<item value="texta"/>
 			<item value="lprod"/>
 			<item value="상품분류"/>
 			<item value="Lprod"/>
@@ -24,7 +25,6 @@
 			<item value="LPRODNM"/>
 			<item value="LPRODGU"/>
 			<item value="title"/>
-			<item value="BOOK"/>
 		</list>
 		<list key="replacehistory">
 			<item value="Users"/>
@@ -50,8 +50,8 @@
 		<item key="DIALOG_FONT_NAME" value="1|맑은 고딕|9.0|0|WINDOWS|1|-12|0|0|0|400|0|0|0|1|0|0|0|0|맑은 고딕"/>
 	</section>
 	<section name="org.eclipse.jst.jsp.ui.internal.preferences.ui.JSPTemplatePreferencePage$JSPEditTemplateDialog_dialogBounds">
-		<item key="DIALOG_X_ORIGIN" value="-271"/>
-		<item key="DIALOG_Y_ORIGIN" value="-181"/>
+		<item key="DIALOG_X_ORIGIN" value="234"/>
+		<item key="DIALOG_Y_ORIGIN" value="28"/>
 		<item key="DIALOG_WIDTH" value="946"/>
 		<item key="DIALOG_HEIGHT" value="651"/>
 		<item key="DIALOG_FONT_NAME" value="1|맑은 고딕|9.0|0|WINDOWS|1|-12|0|0|0|400|0|0|0|1|0|0|0|0|맑은 고딕"/>

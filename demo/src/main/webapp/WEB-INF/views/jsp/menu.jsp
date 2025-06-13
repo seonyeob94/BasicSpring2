@@ -6,6 +6,7 @@
 <!DOCTYPE html>
 <html>
 <head>
+<link rel="shortcut icon" href="#" />
 <title>선엽이 시스템</title>
 <link rel="stylesheet" href="/css/bootstrap.min.css">
 <script type="text/javascript" src="/js/bootstrap.min.js"></script>
